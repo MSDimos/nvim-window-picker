@@ -44,6 +44,10 @@ function M:_find_matching_win_for_char(user_input_char, windows)
 end
 
 function M:pick_window()
+	vim.api.nvim_exec_autocmds(
+		{ 'User' },
+		{ pattern = 'BEFORE_WIN_PICKER_DRAW' }
+	)
 	local windows = self:_get_windows()
 
 	if #windows == 0 then
@@ -73,6 +77,11 @@ function M:pick_window()
 	vim.cmd.redraw()
 
 	self.hint:clear()
+
+	vim.api.nvim_exec_autocmds(
+		{ 'User' },
+		{ pattern = 'AFTER_WIN_PICKER_DRAW' }
+	)
 
 	if char then
 		window = self:_find_matching_win_for_char(char, windows)
